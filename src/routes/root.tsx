@@ -1,4 +1,5 @@
-import { useState, useTransition } from 'react';
+import { useState, useTransition, type ReactNode } from 'react';
+import { Outlet } from 'react-router-dom';
 
 export default function Root() {
   const [tab, setTab] = useState('about');
@@ -19,28 +20,14 @@ export default function Root() {
         <header className="w-full bg-red-300 h-24">
           <h1>Header Bar</h1>
         </header>
-        <div className="w-40 mx-auto pt-40 flex flex-col gap-8">
+        <Outlet />
+        {/* <div className="w-40 mx-auto pt-40 flex flex-col gap-8">
           <h1>Use Transition demo</h1>
 
           <div className="flex gap-4">
-            <button
-              className="py-2 px-4 border rounded-md bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800"
-              onClick={() => updateTab('about')}
-            >
-              About
-            </button>
-            <button
-              className="py-2 px-4 border rounded-md bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800"
-              onClick={() => updateTab('contacts')}
-            >
-              Contact
-            </button>
-            <button
-              className="py-2 px-4 border rounded-md bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800"
-              onClick={() => updateTab('jobs')}
-            >
-              Jobs
-            </button>
+            <TabButton func={() => updateTab('about')}>About</TabButton>
+            <TabButton func={() => updateTab('contacts')}>Contact</TabButton>
+            <TabButton func={() => updateTab('jobs')}>Jobs</TabButton>
           </div>
           <div>
             {isPending && <h1>Loading...</h1>}
@@ -48,14 +35,31 @@ export default function Root() {
             {tab === 'contacts' && !isPending && <h1>Contacts</h1>}
             {tab === 'jobs' && !isPending && <Jobs />}
           </div>
-        </div>
+        </div> */}
       </div>
     </main>
   );
 }
 
+function TabButton({
+  children,
+  func
+}: {
+  children: ReactNode;
+  func: () => void;
+}) {
+  return (
+    <button
+      className="py-2 px-4 border rounded-md bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800"
+      onClick={func}
+    >
+      {children}
+    </button>
+  );
+}
+
 function Jobs() {
-  let jobs = [];
+  const jobs = [];
 
   for (let i = 0; i < 1000; i++) {
     jobs.push(<Job key={i} id={i} />);
@@ -69,7 +73,7 @@ function Jobs() {
   );
 }
 
-function Job({ id }) {
+function Job({ id }: { id: number }) {
   const startTime = performance.now();
 
   while (performance.now() - startTime < 1) {
